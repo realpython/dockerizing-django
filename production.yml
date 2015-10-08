@@ -40,4 +40,4 @@ data:
   image: postgres:latest
   volumes:
     - /var/lib/postgresql
-  command: true
+  command: "true"
