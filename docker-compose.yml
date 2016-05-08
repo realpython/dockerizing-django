@@ -10,6 +10,8 @@ web:
     - /usr/src/app
     - /usr/src/app/static
   env_file: .env
+  environment:
+    DEBUG: 'true'
   command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
 
 nginx:
