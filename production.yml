@@ -6,6 +6,12 @@ web:
   links:
     - postgres:postgres
     - redis:redis
+  environment:
+    DEBUG: 'False'
+    SECRET_KEY: '5(15ds+i2+%ik6z&!yer+ga9m=e%jcqiz_5wszg)r-z!2--b2d'
+    DB_NAME: postgres
+    DB_USER: postgres
+    DB_PASS: postgres
   volumes:
     - /usr/src/app/static
   env_file: .env
@@ -30,6 +36,12 @@ postgres:
     - "5432"
   volumes:
     - pgdata:/var/lib/postgresql/data/
+  environment:
+    DB_NAME: postgres
+    DB_USER: postgres
+    DB_PASS: postgres
+    DB_SERVICE: postgres
+    DB_PORT: 5432
 
 redis:
   restart: always

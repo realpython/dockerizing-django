@@ -9,9 +9,14 @@ web:
   volumes:
     - /usr/src/app
     - /usr/src/app/static
-  env_file: .env
   environment:
     DEBUG: 'true'
+    SECRET_KEY: '5(15ds+i2+%ik6z&!yer+ga9m=e%jcqiz_5wszg)r-z!2--b2d'
+    DB_NAME: postgres
+    DB_USER: postgres
+    DB_PASS: postgres
+    DB_SERVICE: postgres
+    DB_PORT: 5432
   command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
 
 nginx:
@@ -33,6 +38,12 @@ postgres:
     - "5432:5432"
   volumes:
     - pgdata:/var/lib/postgresql/data/
+  environment:
+    DB_NAME: postgres
+    DB_USER: postgres
+    DB_PASS: postgres
+    DB_SERVICE: postgres
+    DB_PORT: 5432
 
 redis:
   restart: always
