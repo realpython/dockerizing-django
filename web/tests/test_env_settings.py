@@ -18,7 +18,7 @@ class DebugSettingTest(TestCase):
             self.assertEqual(settings.DEBUG, True)
 
     def test_debug_off(self):
-        for value in ('No', 'nO', 'N', 'n', 'false', 'False', 'off', 'oFF', 'Yes', 'YES', 'Y', 'On', ''):
+        for value in ('No', 'nO', 'N', 'n', 'false', 'False', 'off', 'oFF', 'Yes', 'YES', 'Y', 'On', '', '1', '0'):
             with patch.dict('os.environ', {'DEBUG': value}):
                 importlib.reload(settings)
                 assert 'DEBUG' in os.environ
