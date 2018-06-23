@@ -1,6 +1,3 @@
-"""Test Environmental settings are handled properly."""
-
-
 import os
 import importlib
 from unittest.mock import patch
@@ -9,29 +6,23 @@ from unittest.mock import patch
 # we have to use tools outside of django, because when it's initialized
 # it's too late to change environment variables
 from unittest import TestCase, main
+from docker_django import settings
 
 
 class DebugSettingTest(TestCase):
-    """Test if setting DEBUG is handled properly."""
 
-    _variants = {
-        True: ('Yes', 'YES', 'Y', 'TRUE', 'tRUE', 'true', 'On'),
+    def test_debug_on(self):
+        with patch.dict('os.environ', {'DEBUG': 'true'}):
+            importlib.reload(settings)
+            assert 'DEBUG' in os.environ
+            self.assertEqual(settings.DEBUG, True)
 
-        False: ('No', 'nO', 'N', 'n', 'false', 'False', 'off', 'oFF'),
-    }
-    env_var_debug = 'DEBUG'
-
-    def test_debug_setting(self):
-        """Check if config accepts environment variable DEBUG and sets it."""
-        from docker_django import settings
-        for result, words in self._variants.items():
-            for word in words:
-                # print(word, result)
-                with patch.dict('os.environ', {self.env_var_debug: word}):
-                    importlib.reload(settings)
-                    assert self.env_var_debug in os.environ
-                    self.assertEqual(settings.DEBUG, result)
-                assert self.env_var_debug not in os.environ  # should be True
+    def test_debug_off(self):
+        for value in ('No', 'nO', 'N', 'n', 'false', 'False', 'off', 'oFF', 'Yes', 'YES', 'Y', 'On', ''):
+            with patch.dict('os.environ', {'DEBUG': value}):
+                importlib.reload(settings)
+                assert 'DEBUG' in os.environ
+                self.assertEqual(settings.DEBUG, False)
 
 
 if __name__ == '__main__':
