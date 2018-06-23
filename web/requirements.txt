@@ -1,4 +1,4 @@
-Django==1.11.13
+Django==2.0.6
 gunicorn==19.3.0
 psycopg2==2.7
 redis==2.10.3
