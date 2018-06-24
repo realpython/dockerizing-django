@@ -1,4 +1,5 @@
 # Upcoming
+* collectstatic as part of building django container
 * running django as non-root user
 * bump python to 3.6.5 
 * bump Django to 2.0.6
@@ -7,6 +8,5 @@
 * removed outdated readme.MD 
 
 # Todo
-* collectstatic to get admin part up and running after container recreation 
 * create new readme.MD
 * add instructions on how to bind container volumes to local ones (pyCharm) 

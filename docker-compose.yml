@@ -7,8 +7,8 @@ web:
     - postgres:postgres
     - redis:redis
   volumes:
-    - /usr/src/app
-    - /usr/src/app/static
+    - /home/django/app
+    - /home/django/app/static
   env_file: .env
   environment:
     DEBUG: 'true'
@@ -20,9 +20,9 @@ nginx:
   ports:
     - "80:80"
   volumes:
-    - /www/static
+    - /home/django/app/static
   volumes_from:
-    - web
+    - web:ro
   links:
     - web:web
 
