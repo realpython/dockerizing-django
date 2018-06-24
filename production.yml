@@ -9,7 +9,7 @@ web:
   volumes:
     - /usr/src/app/static
   env_file: .env
-  command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
+  command: /home/django/.local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
 
 nginx:
   restart: always
