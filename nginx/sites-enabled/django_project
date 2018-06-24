@@ -5,7 +5,7 @@ server {
     charset utf-8;
 
     location /static {
-        alias /home/django/app/static;
+        alias /var/www/static;
     }
 
     location / {

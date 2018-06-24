@@ -1,4 +1,5 @@
 # Upcoming
+* update compose files to compose file version 2
 * updated readme.MD
 * collectstatic as part of building django container
 * running django as non-root user
