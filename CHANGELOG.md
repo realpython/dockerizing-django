@@ -1,5 +1,5 @@
 # Upcoming
-* update compose files to compose file version 2
+* update docker-compose.yml and production.yml to compose file version 3
 * updated readme.MD
 * collectstatic as part of building django container
 * running django as non-root user
@@ -9,6 +9,5 @@
 * enable debug only with value 'true', disable otherwise
  
 # Todo
-* update docker-compose.yml and production.yml to compose file version 3
 * test under MacOS 
 * update readme with up to date instructions for MacOS 
