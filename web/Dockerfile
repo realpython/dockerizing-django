@@ -1,7 +1,12 @@
 FROM python:3.6.5-stretch
 
-RUN groupadd -r django && useradd -r -m -g django django
+ARG unbuffered
+ARG uncached
 ENV PATH /home/django/.local/bin:$PATH
+ENV PYTHONUNBUFFERED=$unbuffered
+ENV PYTHONDONTWRITEBYTECODE=$uncached
+
+RUN groupadd -r django && useradd -r -m -g django django
 USER django:django
 
 WORKDIR /home/django/app

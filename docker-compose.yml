@@ -3,7 +3,11 @@ version: "3"
 services:
   web:
     restart: always
-    build: ./web
+    build:
+      context: ./web
+      args:
+        unbuffered: 1
+        uncached: 1
     expose:
       - "8000"
     volumes:

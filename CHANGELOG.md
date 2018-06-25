@@ -1,4 +1,5 @@
 # Upcoming
+* disable bytecode caching and buffering when building containers for development
 * update docker-compose.yml and production.yml to compose file version 3
 * updated readme.MD
 * collectstatic as part of building django container
