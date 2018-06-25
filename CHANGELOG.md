@@ -1,4 +1,7 @@
 # Upcoming
+* bump gunicorn to 19.8.1
+* bump redis to 2.10.6
+* bump psycopg2 to 2.7.5 and explicitly use binary package to remove warning 
 * disable bytecode caching and buffering when building containers for development
 * update docker-compose.yml and production.yml to compose file version 3
 * updated readme.MD
