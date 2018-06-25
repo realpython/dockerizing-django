@@ -1,43 +1,53 @@
-web:
-  restart: always
-  build: ./web
-  expose:
-    - "8000"
-  links:
-    - postgres:postgres
-    - redis:redis
-  volumes:
-    - /usr/src/app
-    - /usr/src/app/static
-  env_file: .env
-  environment:
-    DEBUG: 'true'
-  command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
+version: "3"
 
-nginx:
-  restart: always
-  build: ./nginx/
-  ports:
-    - "80:80"
-  volumes:
-    - /www/static
-  volumes_from:
-    - web
-  links:
-    - web:web
+services:
+  web:
+    restart: always
+    build:
+      context: ./web
+      args:
+        unbuffered: 1
+        uncached: 1
+    expose:
+      - "8000"
+    volumes:
+      - /home/django/app
+      - static:/home/django/app/static
+    env_file: .env
+    environment:
+      DEBUG: 'true'
+    command: /home/django/.local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
+    depends_on:
+      - postgres
+      - redis
 
-postgres:
-  restart: always
-  image: postgres:latest
-  ports:
-    - "5432:5432"
-  volumes:
-    - pgdata:/var/lib/postgresql/data/
+  nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - "80:80"
+    volumes:
+      - static:/var/www/static:ro
+    depends_on:
+      - web
 
-redis:
-  restart: always
-  image: redis:latest
-  ports:
-    - "6379:6379"
-  volumes:
-    - redisdata:/data
+  postgres:
+    restart: always
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+  redis:
+    restart: always
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+volumes:
+  pgdata:
+  redisdata:
+  static:
