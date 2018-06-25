@@ -13,5 +13,6 @@
 * enable debug only with value 'true', disable otherwise
  
 # Todo
+* add license information
 * test under MacOS 
 * update readme with up to date instructions for MacOS 
