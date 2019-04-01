@@ -1,40 +1,46 @@
-web:
-  restart: always
-  build: ./web
-  expose:
-    - "8000"
-  links:
-    - postgres:postgres
-    - redis:redis
-  volumes:
-    - /usr/src/app/static
-  env_file: .env
-  command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
+version: '3'
 
-nginx:
-  restart: always
-  build: ./nginx/
-  ports:
-    - "80:80"
-  volumes:
-    - /www/static
-  volumes_from:
-    - web
-  links:
-    - web:web
+services:
+  web:
+    restart: always
+    build: ./web
+    expose:
+      - "8000"
+    links:
+      - postgres:postgres
+      - redis:redis
+    volumes:
+      - web-static:/usr/src/app/static
+    env_file: .env
+    command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
 
-postgres:
-  restart: always
-  image: postgres:latest
-  ports:
-    - "5432"
-  volumes:
-    - pgdata:/var/lib/postgresql/data/
+  nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - "80:80"
+    volumes:
+      - web-static:/www/static
+    links:
+      - web:web
 
-redis:
-  restart: always
-  image: redis:latest
-  ports:
-    - "6379"
-  volumes:
-    - redisdata:/data
+  postgres:
+    restart: always
+    image: postgres:latest
+    ports:
+      - "5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+  redis:
+    restart: always
+    image: redis:latest
+    ports:
+      - "6379"
+    volumes:
+      - redisdata:/data
+
+volumes:
+  web-static:
+  pgdata:
+  redisdata:
