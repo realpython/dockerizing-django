@@ -85,11 +85,11 @@ WSGI_APPLICATION = 'docker_django.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'mysql.connector.django',
         'NAME': os.environ['DB_NAME'],
         'USER': os.environ['DB_USER'],
         'PASSWORD': os.environ['DB_PASS'],
-        'HOST': os.environ['DB_SERVICE'],
+        'HOST': os.environ['DB_HOST'],
         'PORT': os.environ['DB_PORT']
     }
 }
