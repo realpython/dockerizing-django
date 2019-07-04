@@ -1,50 +1,50 @@
-version: '3'
+version: '2.1'
 
 services:
   web:
     restart: always
     build: ./web
-    expose:
-      - "8000"
-    links:
-      - postgres:postgres
-      - redis:redis
+    ports:
+      - "${WEB_PORT}:8000"
     volumes:
-      - web-django:/usr/src/app
-      - web-static:/usr/src/app/static
-    env_file: .env
+      - ./web:/usr/src/app
+    env_file: my.env
     environment:
       DEBUG: 'true'
-    command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
+    command: bash -c "python manage.py makemigrations todo && python manage.py migrate && gunicorn docker_django.wsgi:application --reload -w 2 -b :8000"
 
   nginx:
     restart: always
-    build: ./nginx/
+    build: ./nginx
     ports:
-      - "80:80"
+      - "${NGINX_PORT}:80"
     volumes:
-      - web-static:/www/static
+      - ./web/static:/www/static
+      - ./nginx/sites-enabled:/etc/nginx/sites-enabled
     links:
       - web:web
-
-  postgres:
-    restart: always
-    image: postgres:latest
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
 
   redis:
     restart: always
     image: redis:latest
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:6379"
     volumes:
       - redisdata:/data
+      
+  mysql-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - mysql-vol:/var/lib/mysql
+      - ./mysql/:/docker-entrypoint-initdb.d/
 
 volumes:
-  web-django:
-  web-static:
-  pgdata:
+  mysql-vol:
   redisdata:
