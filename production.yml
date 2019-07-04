@@ -1,36 +1,25 @@
-version: '3'
+version: '2.1'
 
 services:
   web:
     restart: always
     build: ./web
-    expose:
+    ports:
       - "8000"
-    links:
-      - postgres:postgres
-      - redis:redis
     volumes:
       - web-static:/usr/src/app/static
     env_file: .env
-    command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn docker_django.wsgi:application -w 2 -b :8000"
 
   nginx:
     restart: always
-    build: ./nginx/
+    build: ./nginx
     ports:
-      - "80:80"
+      - "${NGINX_PORT}:80"
     volumes:
       - web-static:/www/static
     links:
       - web:web
-
-  postgres:
-    restart: always
-    image: postgres:latest
-    ports:
-      - "5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
 
   redis:
     restart: always
@@ -40,7 +29,19 @@ services:
     volumes:
       - redisdata:/data
 
+  mysql-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306"
+    volumes:
+      - mysql-vol:/var/lib/mysql
+
 volumes:
-  web-static:
-  pgdata:
+  mysql-vol:
   redisdata:
+  web-static:

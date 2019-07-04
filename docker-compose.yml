@@ -8,7 +8,7 @@ services:
       - "${WEB_PORT}:8000"
     volumes:
       - ./web:/usr/src/app
-    env_file: my.env
+    env_file: .env
     environment:
       DEBUG: 'true'
     command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn docker_django.wsgi:application --reload -w 2 -b :8000"
