@@ -11,7 +11,7 @@ services:
     env_file: my.env
     environment:
       DEBUG: 'true'
-    command: bash -c "python manage.py makemigrations todo && python manage.py migrate && gunicorn docker_django.wsgi:application --reload -w 2 -b :8000"
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn docker_django.wsgi:application --reload -w 2 -b :8000"
 
   nginx:
     restart: always
