@@ -12,6 +12,7 @@ services:
     env_file: .env
     environment:
       DEBUG: 'true'
+      DB_TYPE: ${DB_TYPE}
     command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn docker_django.wsgi:application --reload --log-level=debug -w 2 -b :8000"
 
   nginx:
@@ -51,7 +52,6 @@ services:
     volumes:
       - mysql-vol:/var/lib/mysql
       - pgdata:/var/lib/postgresql/data/
-    container_name: ${DB_TYPE}_db
 
 volumes:
   mysql-vol:
