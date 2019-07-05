@@ -84,9 +84,9 @@ WSGI_APPLICATION = 'docker_django.wsgi.application'
 # }
 def get_engine():
     '''
-    Set database engine based on DJANGO_DB_TYPE environment variable.
+    Set database engine based on DB_TYPE environment variable.
     Default Engine is 'django.db.backends.postgresql_psycopg2'
-    This will be overridden by specifying DJANGO_DB_ENGINE environment variable
+    This will be overridden by specifying DB_ENGINE environment variable
     '''
     db_type = os.getenv('DB_TYPE', 'postgres').lower()
     if db_type in ('mysql', 'mariadb'):
@@ -97,12 +97,12 @@ def get_engine():
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DJANGO_DB_ENGINE', get_engine()),
-        'NAME': os.environ['DJANGO_DB_NAME'],
-        'USER': os.environ['DJANGO_DB_USER'],
-        'PASSWORD': os.environ['DJANGO_DB_PASS'],
-        'HOST': os.environ['DJANGO_DB_HOST'],
-        'PORT': os.environ['DJANGO_DB_PORT']
+        'ENGINE': os.getenv('DB_ENGINE', get_engine()),
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASS'],
+        'HOST': os.environ['DB_HOST'],
+        'PORT': os.environ['DB_PORT']
     }
 }
 
