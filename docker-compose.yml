@@ -8,7 +8,7 @@ services:
       - "${HOST_WEB_PORT}:8000"
     volumes:
       - ./web:/usr/src/app
-    entrypoint: ["./wait-for-it.sh", "${DJANGO_DB_HOST}:${DJANGO_DB_PORT}", "--strict", "--timeout=300", "--"]
+    entrypoint: ["./wait-for-it.sh", "${DB_HOST}:${DB_PORT}", "--strict", "--timeout=300", "--"]
     env_file: .env
     environment:
       DEBUG: 'true'
@@ -47,7 +47,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
-      - "${HOST_DATABASE_PORT:-$DB_PORT}:${DB_PORT}"
+      - "${HOST_DATABASE_PORT}:${DB_PORT}"
     volumes:
       - mysql-vol:/var/lib/mysql
       - pgdata:/var/lib/postgresql/data/

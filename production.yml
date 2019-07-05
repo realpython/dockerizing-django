@@ -6,7 +6,7 @@ services:
     build: ./web
     ports:
       - "8000"
-    entrypoint: ["./wait-for-it.sh", "${DJANGO_DB_HOST}:${DJANGO_DB_PORT}", "--strict", "--timeout=300", "--"]
+    entrypoint: ["./wait-for-it.sh", "${DB_HOST}:${DB_PORT}", "--strict", "--timeout=300", "--"]
     volumes:
       - web-static:/usr/src/app/static
     env_file: .env
@@ -44,7 +44,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
-      - "${HOST_DATABASE_PORT:-$DB_PORT}:${DB_PORT}"
+      - "${HOST_DATABASE_PORT}:${DB_PORT}"
     volumes:
       - mysql-vol:/var/lib/mysql
       - pgdata:/var/lib/postgresql/data/
