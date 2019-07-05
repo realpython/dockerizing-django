@@ -5,19 +5,20 @@ services:
     restart: always
     build: ./web
     ports:
-      - "${WEB_PORT}:8000"
+      - "${HOST_WEB_PORT}:8000"
     volumes:
       - ./web:/usr/src/app
+    entrypoint: ["./wait-for-it.sh", "${DJANGO_DB_HOST}:${DJANGO_DB_PORT}", "--strict", "--timeout=300", "--"]
     env_file: .env
     environment:
       DEBUG: 'true'
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn docker_django.wsgi:application --reload -w 2 -b :8000"
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn docker_django.wsgi:application --reload --log-level=debug -w 2 -b :8000"
 
   nginx:
     restart: always
     build: ./nginx
     ports:
-      - "${NGINX_PORT}:80"
+      - "${HOST_NGINX_PORT}:80"
     volumes:
       - ./web/static:/www/static
       - ./nginx/sites-enabled:/etc/nginx/sites-enabled
@@ -28,23 +29,31 @@ services:
     restart: always
     image: redis:latest
     ports:
-      - "${REDIS_PORT}:6379"
+      - "${HOST_REDIS_PORT}:6379"
     volumes:
       - redisdata:/data
-      
-  mysql-db:
-    image: mysql:5.7
+
+  database:
+    build: ./${DB_TYPE}
+    image: ${DB_TYPE}_db
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      # POSTGRES SPECIFIC
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      # MYSQL SPECIFIC
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
-      - "${MYSQL_PORT}:3306"
+      - "${HOST_DATABASE_PORT:-$DB_PORT}:${DB_PORT}"
     volumes:
       - mysql-vol:/var/lib/mysql
-      - ./mysql/:/docker-entrypoint-initdb.d/
+      - pgdata:/var/lib/postgresql/data/
+    container_name: ${DB_TYPE}_db
 
 volumes:
   mysql-vol:
+  pgdata:
   redisdata:
